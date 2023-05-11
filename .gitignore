@@ -1,0 +1,7 @@
+target
+generated
+Config.toml
+**/target/
+**/generated
+**/Config.toml
+**/test.bal
