@@ -44,7 +44,6 @@ public type AddressCheck record {|
     string email;
     string[] address;
     string gramasevaka_area;
-    string isValid?;
 |};
 
 final mongodb:Client mongoCli = check new ({connection: {url: string `mongodb+srv://${db_username}:${db_pwd}@gramacheckcluster.used77d.mongodb.net/?retryWrites=true&w=majority`}});
