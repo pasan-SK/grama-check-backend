@@ -23,4 +23,8 @@ service /help on serviceListener{
     isolated resource function put update_reply(@http:Payload HelpReplyUpdateRequest helpReplyUpdateRequest, http:Caller caller) returns error? {
         return updateHelpDocReply(caller, helpReplyUpdateRequest);
     }
+
+    isolated resource function post address_check(@http:Payload AddressCheck addressCheckRequest, http:Caller caller) returns error? {
+        return addressCheck(caller, addressCheckRequest);
+    }
 }
