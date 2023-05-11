@@ -12,12 +12,6 @@ service /public_user on serviceListener{
     }
 
     isolated resource function post address_check(@http:Payload AddressCheck addressCheckRequest, http:Caller caller) returns error? {
-        // return addressCheck(caller, addressCheckRequest);
-        var result = addressCheck(caller, addressCheckRequest);
-        if (result is error) {
-            panic result;
-        } else {
-            return result;
-        }
+        return addressCheck(caller, addressCheckRequest);
     }
 }
