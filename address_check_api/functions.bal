@@ -26,14 +26,18 @@ public type AddressCheck record {|
 
 final mongodb:Client mongoCli = check new ({connection: {url: string `mongodb+srv://${db_username}:${db_pwd}@gramacheckcluster.used77d.mongodb.net/?retryWrites=true&w=majority`}});
 
-isolated function addPublicUser(PublicUser publicUser) returns string|error {
+isolated function addPublicUser(PublicUser publicUser, http:Caller caller) returns error? {
     
+    http:Response response = new;
     map<json> newPublicUser = { "email": publicUser.email, "first_name": publicUser.first_name, "last_name": publicUser.last_name, "nic": publicUser.nic, "address": publicUser.address, "gramasevaka_area": publicUser.gramasevaka_area, "phone_num": publicUser.phone_num };
 
     // TODO: Need to check the whether there is an user with the same email first !!!!
     check mongoCli->insert(newPublicUser, public_user_collection_name, db_name);
     
-    return "Added the public user successfully";
+    response.statusCode = 201;
+    response.setPayload("Added the public user successfully");
+    check caller->respond(response);
+    return;
 }
 
 isolated function getAllPublicUsers() returns PublicUser[]|error {
