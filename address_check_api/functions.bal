@@ -49,7 +49,7 @@ public type HelpReplyUpdateRequest record {|
 
 final mongodb:Client mongoCli = check new ({connection: {url: string `mongodb+srv://${db_username}:${db_pwd}@gramacheckcluster.used77d.mongodb.net/?retryWrites=true&w=majority`}});
 
-isolated function addPublicUser(PublicUser publicUser) returns ()|string|error {
+isolated function addPublicUser(PublicUser publicUser) returns string|error {
     
     map<json> newPublicUser = { "email": publicUser.email, "first_name": publicUser.first_name, "last_name": publicUser.last_name, "nic": publicUser.nic, "address": publicUser.address, "gramasevaka_area": publicUser.gramasevaka_area, "phone_num": publicUser.phone_num };
 
@@ -72,7 +72,7 @@ isolated function getAllPublicUsers() returns PublicUser[]|error {
     return publicUsers;
 }
 
-isolated function addressCheck(http:Caller caller, AddressCheck addressCheckRequest) returns ()|error {
+isolated function addressCheck(http:Caller caller, AddressCheck addressCheckRequest) returns error? {
     
     http:Response response = new;
 

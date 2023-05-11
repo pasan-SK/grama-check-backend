@@ -3,7 +3,7 @@ import ballerina/http;
 listener http:Listener serviceListener = new (9090);
 service /public_user on serviceListener{
 
-    isolated resource function post .(@http:Payload PublicUser publicUser) returns ()|string|error {
+    isolated resource function post .(@http:Payload PublicUser publicUser) returns string|error? {
         return check addPublicUser(publicUser);
     }
 
@@ -11,7 +11,7 @@ service /public_user on serviceListener{
         return getAllPublicUsers();
     }
 
-    isolated resource function post address_check(@http:Payload AddressCheck addressCheckRequest, http:Caller caller) returns ()|error? {
+    isolated resource function post address_check(@http:Payload AddressCheck addressCheckRequest, http:Caller caller) returns error? {
         return addressCheck(caller, addressCheckRequest);
     }
 }
