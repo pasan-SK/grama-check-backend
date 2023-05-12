@@ -5,3 +5,7 @@ Config.toml
 **/generated
 **/Config.toml
 **/test.bal
+testProject/
+testProject
+**/testProject/
+.vscode

@@ -70,6 +70,7 @@ isolated function addHelpDocument(http:Caller caller, HelpDocument helpDocument)
         return;
     } else {
         check mongoCli->insert(newHelpDocument, help_collection_name, db_name);
+        response.statusCode = 201;
         response.setPayload("Added the help document successfully");
         check caller->respond(response);
         return;
