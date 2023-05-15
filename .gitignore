@@ -9,3 +9,7 @@ testProject/
 testProject
 **/testProject/
 .vscode
+.DS_Store
+node-hook
+python_slack_api
+

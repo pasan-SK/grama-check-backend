@@ -22,6 +22,7 @@ public type HelpDocument record {|
     anydata _id?;
     string public_user_email;
     string msg;
+    string gramasevaka_area;
     string status;
     string reply;
 |};
@@ -29,6 +30,7 @@ public type HelpDocument record {|
 public type HelpStatusUpdateRequest record {|
     string public_user_email;
     string msg;
+    string gramasevaka_area;
     string newStatus;
     string reply;
 |};
@@ -36,6 +38,7 @@ public type HelpStatusUpdateRequest record {|
 public type HelpReplyUpdateRequest record {|
     string public_user_email;
     string msg;
+    string gramasevaka_area;
     string status;
     string newReply;
 |};
@@ -52,7 +55,7 @@ final mongodb:Client mongoCli = check new ({connection: {url: string `mongodb+sr
 
 isolated function addHelpDocument(http:Caller caller, HelpDocument helpDocument) returns error? {
     
-    map<json> newHelpDocument = { "public_user_email": helpDocument.public_user_email, "msg": helpDocument.msg, "status": helpDocument.status, "reply": helpDocument.reply };
+    map<json> newHelpDocument = { "public_user_email": helpDocument.public_user_email, "msg": helpDocument.msg, "gramasevaka_area": helpDocument.gramasevaka_area, "status": helpDocument.status, "reply": helpDocument.reply };
 
     HelpDocument[] helpDocuments = [];
     stream<HelpDocument, error?> resultStream = check mongoCli->find(help_collection_name, db_name, rowType = HelpDocument, filter = { "public_user_email": helpDocument.public_user_email, "msg": helpDocument.msg });
@@ -128,7 +131,7 @@ isolated function updateHelpDocStatus(http:Caller caller, HelpStatusUpdateReques
         return;
     } else {
         HelpDocument helpDocument = helpDocuments[0];
-        map<json> updatedHelpDocument = {"public_user_email": helpStatusUpdateRequest.public_user_email, "msg": helpStatusUpdateRequest.msg, "status": helpStatusUpdateRequest.newStatus, "reply": helpDocument.reply };
+        map<json> updatedHelpDocument = {"public_user_email": helpStatusUpdateRequest.public_user_email, "msg": helpStatusUpdateRequest.msg, "gramasevaka_area": helpDocument.gramasevaka_area, "status": helpStatusUpdateRequest.newStatus, "reply": helpDocument.reply };
         // int intResult = check mongoCli->update(updatedHelpDocument, help_collection_name, db_name, filter = { "public_user_email": helpStatusUpdateRequest.public_user_email, "msg": helpStatusUpdateRequest.msg });
         int _ = check mongoCli->delete(help_collection_name, db_name, filter = { "public_user_email": helpStatusUpdateRequest.public_user_email, "msg": helpStatusUpdateRequest.msg });
         check mongoCli->insert(updatedHelpDocument, help_collection_name, db_name);
@@ -164,7 +167,7 @@ isolated function updateHelpDocReply(http:Caller caller, HelpReplyUpdateRequest 
         return;
     } else {
         HelpDocument helpDocument = helpDocuments[0];
-        map<json> updatedHelpDocument = {"public_user_email": helpReplyUpdateRequest.public_user_email, "msg": helpReplyUpdateRequest.msg, "status": helpDocument.status, "reply": helpReplyUpdateRequest.newReply };
+        map<json> updatedHelpDocument = {"public_user_email": helpReplyUpdateRequest.public_user_email, "msg": helpReplyUpdateRequest.msg, "gramasevaka_area": helpDocument.gramasevaka_area, "status": helpDocument.status, "reply": helpReplyUpdateRequest.newReply };
         // int intResult = check mongoCli->update(updatedHelpDocument, help_collection_name, db_name, filter = { "public_user_email": helpStatusUpdateRequest.public_user_email, "msg": helpStatusUpdateRequest.msg });
         int _ = check mongoCli->delete(help_collection_name, db_name, filter = { "public_user_email": helpReplyUpdateRequest.public_user_email, "msg": helpReplyUpdateRequest.msg });
         check mongoCli->insert(updatedHelpDocument, help_collection_name, db_name);
