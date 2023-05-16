@@ -252,7 +252,7 @@ isolated function putSlackMsg(http:Caller caller, SlackMsg slackMsg) returns err
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "New issue from " + slackMsg.public_user_email + " in " + slackMsg.gramasevaka_area + "gramasevaka area : \n" + slackMsg.msg
+                    "text": "New issue from " + slackMsg.public_user_email + " in " + slackMsg.gramasevaka_area + " gramasevaka area : \n" + slackMsg.msg
                 }
             }
         ],
