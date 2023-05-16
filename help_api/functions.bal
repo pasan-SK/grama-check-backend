@@ -38,7 +38,6 @@ public type HelpDocument record {|
 |};
 
 public type SlackMsg record {|
-    anydata _id?;
     string public_user_email;
     string msg;
     string gramasevaka_area;
