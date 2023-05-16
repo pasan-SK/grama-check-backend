@@ -27,4 +27,8 @@ service /help on serviceListener{
     isolated resource function post address_check(@http:Payload AddressCheck addressCheckRequest, http:Caller caller) returns error? {
         return addressCheck(caller, addressCheckRequest);
     }
+
+    isolated resource function post put_slack_msg(@http:Payload SlackMsg slackMsg, http:Caller caller) returns error? {
+        return putSlackMsg(caller, slackMsg);
+    }
 }

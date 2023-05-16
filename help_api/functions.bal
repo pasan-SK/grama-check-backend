@@ -1,11 +1,21 @@
 import ballerinax/mongodb;
 import ballerina/http;
+import ballerinax/slack;
 
 configurable string db_username = ?;
 configurable string db_pwd = ?;
 configurable string db_name = ?;
 configurable string help_collection_name = ?;
 configurable string public_user_collection_name = ?;
+configurable string slack_bot_oauth_token = ?;
+configurable string grama_check_channel_name = ?;
+
+slack:ConnectionConfig slackConfig = {
+    auth: {
+        token: slack_bot_oauth_token
+    }
+};
+final slack:Client slackClient = check new(slackConfig);
 
 public type PublicUser record {|
     anydata _id?;
@@ -25,6 +35,13 @@ public type HelpDocument record {|
     string gramasevaka_area;
     string status;
     string reply;
+|};
+
+public type SlackMsg record {|
+    anydata _id?;
+    string public_user_email;
+    string msg;
+    string gramasevaka_area;
 |};
 
 public type HelpStatusUpdateRequest record {|
@@ -222,6 +239,38 @@ isolated function addressCheck(http:Caller caller, AddressCheck addressCheckRequ
             check caller->respond(response);
             return;
         }
+    }
+}
+
+isolated function putSlackMsg(http:Caller caller, SlackMsg slackMsg) returns error? {
+    http:Response response = new;
+    
+    slack:Message messageParams = {
+        channelName: grama_check_channel_name,
+        text: "New issue posted",
+        blocks: [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "New issue from " + slackMsg.public_user_email + " in " + slackMsg.gramasevaka_area + "gramasevaka area : \n" + slackMsg.msg
+                }
+            }
+        ],
+        mrkdwn: true
+    };
+
+    string|error threadID = slackClient->postMessage(messageParams);
+    if (threadID is error) {
+        response.statusCode = 500;
+        response.setPayload("Error while sending the message");
+        check caller->respond(response);
+        return;
+    } else {
+        response.statusCode = 200;
+        response.setPayload("Message sent successfully");
+        check caller->respond(response);
+        return;
     }
 }
 
