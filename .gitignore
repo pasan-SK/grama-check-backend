@@ -10,6 +10,5 @@ testProject
 **/testProject/
 .vscode
 .DS_Store
-node-hook
 python_slack_api
-
+**/node_modules
