@@ -72,8 +72,13 @@ app.post('/', async (req, res) => {
           }
         };
         const result = await collection.updateOne(filter, updateDoc);
-        console.log(`Successfully updated the document with _id: ${result.matchedCount}`);
-        res.status(200).send('Successfully updated the request');
+        if (result.matchedCount > 0) {
+          console.log(`Successfully updated the document with _id: ${result.matchedCount}`);
+          res.status(200).send('Successfully updated the request');
+        } else {
+          console.error('Failed to update the document');
+          res.status(500).send('Failed to update the request');
+        }
       }
     }
   } 
@@ -99,11 +104,12 @@ const server = app.listen(PORT,  async () => {
     collection.insertOne(document, (err, result) => {
       if (err) {
         console.error('Error inserting document:', err);
+        res.status(500).send('Error inserting document');
       } else {
         console.log('Document inserted successfully:', result.insertedId);
       }
     });
-    axios.post('https://hooks.slack.com/services/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', {
+    axios.post('https://hooks.slack.com/services/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', {
           "blocks": [
             {
               "type": "section",
