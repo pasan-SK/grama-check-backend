@@ -12,3 +12,4 @@ testProject
 .DS_Store
 python_slack_api
 **/node_modules
+**/.env

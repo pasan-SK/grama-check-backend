@@ -1,12 +1,14 @@
 const express = require('express')
 const axios = require('axios')
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://grama_check_admin:1cWV0fu2JasChRh0@gramacheckcluster.used77d.mongodb.net/?retryWrites=true&w=majority";
-const dbName = 'gramaCheckDB';
-const helpCollectionName = 'help';
+require('dotenv').config();
+
+const dbName = process.env.MONGODB_DB;
+const helpCollectionName = process.env.MONGODB_HELP_COLLECTION;
+const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 const PORT = process.env.PORT || 3030;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const uri = "mongodb+srv://grama_check_admin:1cWV0fu2JasChRh0@gramacheckcluster.used77d.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -109,7 +111,7 @@ const server = app.listen(PORT,  async () => {
         console.log('Document inserted successfully:', result.insertedId);
       }
     });
-    axios.post('https://hooks.slack.com/services/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', {
+    axios.post(slackWebhookUrl, {
           "blocks": [
             {
               "type": "section",
